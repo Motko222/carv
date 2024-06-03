@@ -12,13 +12,13 @@ Description=Carv Verifier
 After=network-online.target
 [Service]
 User=root
-WorkingDirectory=/root/carv
-ExecStart=/root/carv/bin/verifier -conf /root/carv/configs/config.yaml
+WorkingDirectory=/root/verifier
+ExecStart=/root/verifier/bin/verifier -conf /root/verifier/configs/config.yaml
 Restart=on-failure
 RestartSec=60
 [Install]
-WantedBy=multi-user.target" > /etc/systemd/system/carvd.service
+WantedBy=multi-user.target" > /etc/systemd/system/carv-verifier.service
 
 sudo systemctl daemon-reload
-sudo systemctl enable carvd
+sudo systemctl enable carv-verifier
 
