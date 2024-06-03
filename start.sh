@@ -2,5 +2,5 @@
 
 source ~/.bash_profile
 
-sudo systemctl restart carvd
-sudo systemctl status carvd
+sudo systemctl restart carv-verifier
+sudo systemctl status carv-verifier
