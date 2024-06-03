@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sudo systemctl stop carvd
-sudo systemctl status carvd
+sudo systemctl stop carv-verifier
+sudo systemctl status carv-verifier
