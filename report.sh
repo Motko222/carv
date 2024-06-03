@@ -6,7 +6,7 @@ version=$(echo {$(sudo journalctl -u carv-verifier.service | grep version | tail
 service=$(sudo systemctl status carv-verifier --no-pager | grep "active (running)" | wc -l)
 pid=$(pidof verifier)
 network=testnet
-chain=opBNB testnet
+chain="opBNB testnet"
 id=carv-$CARV_ID
 bucket=node
 
@@ -24,7 +24,6 @@ cat << EOF
   "machine":"$MACHINE",
   "network":"$network",
   "chain":"$chain",
-  "type":"node",
   "version":"$version",
   "status":"$status",
   "message":"$message",
