@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo journalctl -u carvd.service -f --no-hostname -o cat
+sudo journalctl -u carv-verifier.service -f --no-hostname -o cat
