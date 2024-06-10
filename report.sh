@@ -9,6 +9,7 @@ network=testnet
 chain="opBNB testnet"
 id=carv-$CARV_ID
 bucket=node
+last=$(sudo journalctl -u carv-verifier.service --no-hostname -o cat | grep "tx hash" | tail -1 | jq -r .ts)
 
 if [ $service -ne 1 ]
 then 
@@ -16,6 +17,7 @@ then
   message="service not running"
 else 
   status="ok";
+  message="last $last"
 fi
 
 cat << EOF
