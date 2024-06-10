@@ -30,6 +30,7 @@ cat << EOF
   "status":"$status",
   "message":"$message",
   "service":$service,
+  "last_attestation":$last,
   "pid":$pid,
   "updated":"$(date --utc +%FT%TZ)"
 }
