@@ -1,5 +1,15 @@
 #!/bin/bash
 
+hdate () {
+  awk -v date="$(date +%s -d "$1")" -v now="$(date +%s)" '
+    BEGIN {  diff = now - date;
+       if (diff > (24*60*60)) printf "%.0f days ago", diff/(24*60*60);
+       else if (diff > (60*60)) printf "%.0f hours ago", diff/(60*60);
+       else if (diff > 60) printf "%.0f minutes ago", diff/60;
+       else printf "%s seconds ago", diff;
+    }'
+}
+
 source ~/.bash_profile
 
 version=$(echo {$(sudo journalctl -u carv-verifier.service | grep version | tail -1 | cut -d '{' -f 2-) | jq -r '."service.version"')
@@ -12,12 +22,12 @@ bucket=node
 last=$(sudo journalctl -u carv-verifier.service --no-hostname -o cat | grep "tx hash" | tail -1 | jq -r .ts)
 
 if [ $service -ne 1 ]
-then 
+then
   status="error";
   message="service not running"
-else 
+else
   status="ok";
-  message="last $last"
+  message="last tx: "$(hdate $last)
 fi
 
 cat << EOF
@@ -30,7 +40,6 @@ cat << EOF
   "status":"$status",
   "message":"$message",
   "service":$service,
-  "last_attestation":$last,
   "pid":$pid,
   "updated":"$(date --utc +%FT%TZ)"
 }
