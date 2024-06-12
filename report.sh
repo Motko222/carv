@@ -15,11 +15,15 @@ source ~/.bash_profile
 version=$(echo {$(sudo journalctl -u carv-verifier.service | grep version | tail -1 | cut -d '{' -f 2-) | jq -r '."service.version"')
 service=$(sudo systemctl status carv-verifier --no-pager | grep "active (running)" | wc -l)
 pid=$(pidof verifier)
-network=testnet
-chain="opBNB testnet"
-id=carv-$CARV_ID
-bucket=node
 last=$(sudo journalctl -u carv-verifier.service --no-hostname -o cat | grep "tx hash" | tail -1 | jq -r .ts)
+
+chain=$CARV_CHAIN
+network=$CARV_NETWORK
+type=$CARV_TYPE
+owner=$CARV_OWNER
+id=$CARV_ID
+chain=$CARV_CHAIN
+group=$CARV_GROUP
 
 if [ $service -ne 1 ]
 then
@@ -49,11 +53,11 @@ EOF
 if [ ! -z $INFLUX_HOST ]
 then
  curl --request POST \
- "$INFLUX_HOST/api/v2/write?org=$INFLUX_ORG&bucket=$bucket&precision=ns" \
+ "$INFLUX_HOST/api/v2/write?org=$INFLUX_ORG&bucket=$INFLUX_BUCKET&precision=ns" \
   --header "Authorization: Token $INFLUX_TOKEN" \
   --header "Content-Type: text/plain; charset=utf-8" \
   --header "Accept: application/json" \
   --data-binary "
-    status,node=$id,machine=$MACHINE status=\"$status\",message=\"$message\",version=\"$version\",url=\"$url\",network=\"$network\",chain=\"$chain\" $(date +%s%N) 
+    report,id=$id,machine=$MACHINE,owner=$owner,grp=$group status=\"$status\",message=\"$message\",version=\"$version\",url=\"$url\",chain=\"$chain\",network=\"$network\",type=\"$type\" $(date +%s%N)
     "
 fi
