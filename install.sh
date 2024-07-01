@@ -14,8 +14,8 @@ After=network-online.target
 User=root
 WorkingDirectory=/root/verifier
 ExecStart=/root/verifier/bin/verifier -conf /root/verifier/configs/config_local.yaml
-Restart=on-failure
-RestartSec=60
+Restart=always
+RestartSec=10
 [Install]
 WantedBy=multi-user.target" > /etc/systemd/system/carv-verifier.service
 
