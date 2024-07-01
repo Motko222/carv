@@ -1,11 +1,9 @@
 #!/bin/bash
 
-cd ~
-git clone https://github.com/carv-protocol/verifier
+git clone https://github.com/carv-protocol/verifier.git
 cd verifier
+git checkout verifier-alphanet
 make build
-make init
-# make all
 
 printf "[Unit]
 Description=Carv Verifier
