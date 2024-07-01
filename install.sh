@@ -13,7 +13,7 @@ After=network-online.target
 [Service]
 User=root
 WorkingDirectory=/root/verifier
-ExecStart=/root/verifier/bin/verifier -conf /root/verifier/configs/config.yaml
+ExecStart=/root/verifier/bin/verifier -conf /root/verifier/configs/config_local.yaml
 Restart=on-failure
 RestartSec=60
 [Install]
