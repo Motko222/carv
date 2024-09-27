@@ -10,20 +10,15 @@ hdate () {
     }'
 }
 
+path=$(cd -- $(dirname -- "${BASH_SOURCE[0]}") && pwd)
+folder=$(echo $path | awk -F/ '{print $NF}')
+json=~/logs/report-$folder
 source ~/.bash_profile
 
 version=$(echo {$(sudo journalctl -u carv-verifier.service | grep version | tail -1 | cut -d '{' -f 2-) | jq -r '."service.version"')
 service=$(sudo systemctl status carv-verifier --no-pager | grep "active (running)" | wc -l)
 pid=$(pidof verifier)
 last=$(sudo journalctl -u carv-verifier.service --no-hostname -o cat | grep "tx hash" | tail -1 | jq -r .ts)
-
-chain=$CARV_CHAIN
-network=$CARV_NETWORK
-type=$CARV_TYPE
-owner=$OWNER
-id=$CARV_ID
-chain=$CARV_CHAIN
-group=$CARV_GROUP
 
 if [ $service -ne 1 ]
 then
@@ -34,30 +29,26 @@ else
   message="last tx: "$(hdate $last)
 fi
 
-cat << EOF
+cat >$json << EOF
 {
-  "id":"$id",
-  "machine":"$MACHINE",
-  "network":"$network",
-  "chain":"$chain",
-  "version":"$version",
-  "status":"$status",
-  "message":"$message",
-  "service":$service,
-  "pid":$pid,
-  "updated":"$(date --utc +%FT%TZ)"
+  "updated":"$(date --utc +%FT%TZ)",
+  "measurement":"report",
+  "tags": {
+     "id":"$folder",
+     "machine":"$MACHINE",
+     "grp":"node",
+     "owner":"$OWNER"
+  },
+  "fields": {
+      "network":"mainnet",
+      "chain":"alphanet",
+      "version":"$version",
+      "status":"$status",
+      "message":"$message",
+      "service":$service,
+      "pid":$pid,
+  }
 }
 EOF
 
-# send data to influxdb
-if [ ! -z $INFLUX_HOST ]
-then
- curl --request POST \
- "$INFLUX_HOST/api/v2/write?org=$INFLUX_ORG&bucket=$INFLUX_BUCKET&precision=ns" \
-  --header "Authorization: Token $INFLUX_TOKEN" \
-  --header "Content-Type: text/plain; charset=utf-8" \
-  --header "Accept: application/json" \
-  --data-binary "
-    report,id=$id,machine=$MACHINE,owner=$owner,grp=$group status=\"$status\",message=\"$message\",version=\"$version\",url=\"$url\",chain=\"$chain\",network=\"$network\",type=\"$type\" $(date +%s%N)
-    "
-fi
+cat $json
