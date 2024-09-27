@@ -46,7 +46,7 @@ cat >$json << EOF
       "status":"$status",
       "message":"$message",
       "service":$service,
-      "pid":$pid,
+      "pid":$pid
   }
 }
 EOF
