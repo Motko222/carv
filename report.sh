@@ -17,7 +17,6 @@ source ~/.bash_profile
 
 version=$(echo {$(sudo journalctl -u carv-verifier.service | grep version | tail -1 | cut -d '{' -f 2-) | jq -r '."service.version"')
 service=$(sudo systemctl status carv-verifier --no-pager | grep "active (running)" | wc -l)
-pid=$(pidof verifier)
 last=$(sudo journalctl -u carv-verifier.service --no-hostname -o cat | grep "tx hash" | tail -1 | jq -r .ts)
 
 if [ $service -ne 1 ]
@@ -45,8 +44,7 @@ cat >$json << EOF
       "version":"$version",
       "status":"$status",
       "message":"$message",
-      "service":$service,
-      "pid":$pid
+      "service":$service
   }
 }
 EOF
