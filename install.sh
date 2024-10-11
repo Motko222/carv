@@ -4,7 +4,6 @@ cd ~
 rm -r verifier
 git clone https://github.com/carv-protocol/verifier.git
 cd verifier
-git checkout verifier-alphanet
 make build
 
 printf "[Unit]
