@@ -1,15 +1,5 @@
 #!/bin/bash
 
-hdate () {
-  awk -v date="$(date +%s -d "$1")" -v now="$(date +%s)" '
-    BEGIN {  diff = now - date;
-       if (diff > (24*60*60)) printf "%.0f days ago", diff/(24*60*60);
-       else if (diff > (60*60)) printf "%.0f hours ago", diff/(60*60);
-       else if (diff > 60) printf "%.0f minutes ago", diff/60;
-       else printf "%s seconds ago", diff;
-    }'
-}
-
 path=$(cd -- $(dirname -- "${BASH_SOURCE[0]}") && pwd)
 folder=$(echo $path | awk -F/ '{print $NF}')
 json=~/logs/report-$folder
@@ -28,10 +18,7 @@ source ~/.bash_profile
 #  message="last tx: "$(hdate $last)
 #fi
 
-tail=100000
-container=$(docker ps | grep carv | awk '{print $NF}')
-[ $container ] && docker_status=$(docker inspect $container | jq -r .[].State.Status)
-errors=$(docker logs --tail $tail $container 2>&1 | grep $(date --utc +%F) | grep -c ERROR)
+errors=$(docker logs verifier 2>&1 | grep $(date --utc +%F) | grep -c ERROR)
 
 case $docker_status in
   running) status=ok; message="errors $errors" ;;
