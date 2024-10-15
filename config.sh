@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nano ~/verifier/configs/config_local.yaml
+nano ~/verifier/configs/config_docker.yaml
