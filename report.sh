@@ -10,7 +10,7 @@ docker_status=$(docker inspect verifier | jq -r .[].State.Status)
 errors=$(docker logs verifier 2>&1 | grep $(date --utc +%F) | grep -c ERROR)
 
 case $docker_status in
-  running) status=ok; message="errors $errors" ;;
+  running) status=ok; message="" ;;
   restarting) status=warning; message="docker is restarting" ;;
   *) status=error; message="docker not running" ;;
 esac
