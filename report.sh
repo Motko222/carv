@@ -31,7 +31,7 @@ cat >$json << EOF
       "version":"$version",
       "status":"$status",
       "message":"$message",
-      "errors":$errors
+      "errors":"$errors"
   }
 }
 EOF
