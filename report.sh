@@ -4,6 +4,7 @@ path=$(cd -- $(dirname -- "${BASH_SOURCE[0]}") && pwd)
 folder=$(echo $path | awk -F/ '{print $NF}')
 json=~/logs/report-$folder
 source ~/.bash_profile
+source $path/env
 
 docker_status=$(docker inspect verifier | jq -r .[].State.Status)
 errors=$(docker logs verifier 2>&1 | grep $(date --utc +%F) | grep -c ERROR)
@@ -19,7 +20,7 @@ cat >$json << EOF
   "updated":"$(date --utc +%FT%TZ)",
   "measurement":"report",
   "tags": {
-     "id":"$folder",
+     "id":"$folder-ID",
      "machine":"$MACHINE",
      "grp":"node",
      "owner":"$OWNER"
